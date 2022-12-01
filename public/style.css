@@ -1,4 +1,4 @@
-body {
+/* body {
   font-family: sans-serif;
 }
 
@@ -18,4 +18,35 @@ nav a {
 form div {
   margin: 1em;
   display: inline-block;
+} */
+html {
+  height: 100vh;
 }
+
+.nav-link {
+  color: white !important;
+}
+
+.navbar{
+  background-color: #3999C2 !important;
+}
+
+#authform {
+  display: flex;
+  /* position: absolute; */
+  align-items: center !important;
+  justify-content: space-around !important;
+  align-content: center;
+  /* height: 100% !important; */
+  /* margin: auto;
+  width: 100%; */
+}
+
+.logo{
+  border-radius: 15px;
+}
+
+#auth {
+  align-self: center;
+}
+
