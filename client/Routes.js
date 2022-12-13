@@ -34,7 +34,7 @@ class Routes extends Component {
             <Route path='/loggedhome' component={LoggedHome}></Route>
             <Route path="/login" component={Login} />
             <Route path="/signup" component={Signup} />
-            <Redirect to="/loggedhome" />
+            {/* <Redirect to="/loggedhome" /> */}
           </Switch>
         )}
       </div>
