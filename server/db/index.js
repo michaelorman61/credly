@@ -6,9 +6,13 @@ const User = require('./models/User');
 const Card = require('./models/Card');
 const Reward = require('./models/Reward')
 
+const User_Cards = db.define('User_Cards', {
+
+})
+
 //associations could go here!
-User.hasMany(Card);
-Card.belongsTo(User);
+User.belongsToMany(Card, {through: User_Cards});
+Card.belongsToMany(User, {through: User_Cards});
 
 Card.hasMany(Reward);
 Reward.belongsTo(Card);
@@ -19,6 +23,7 @@ module.exports = {
   models: {
     User,
     Card,
-    Reward
+    Reward,
+    User_Cards
   },
 }

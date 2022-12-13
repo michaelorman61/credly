@@ -15,7 +15,6 @@ router.get('/:companyName', async (req, res, next) => {
   try {
     const companyCards = await Card.findAll({
       where: {
-        userId: null,
         company: req.params.companyName
       }
     });

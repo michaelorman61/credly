@@ -1,5 +1,5 @@
 const router = require('express').Router()
-const { models: { User, Card }} = require('../db')
+const { models: { User, Card, User_Cards, Reward }} = require('../db')
 module.exports = router
 
 router.get('/', async (req, res, next) => {
@@ -16,10 +16,16 @@ router.get('/', async (req, res, next) => {
 // GET cards in a user's portfolio
 router.get('/:userId', async (req, res, next) => {
   try {
-    const userCards = await Card.findAll({
+    const userCards = await User.findOne({
       where: {
-        userId: req.params.userId
-      }
+        id: req.params.userId
+      },
+      include: [{
+        model: Card,
+        include: {
+          model: Reward
+        }
+      }],
     })
     res.send(userCards);
   } catch (error) {
@@ -34,6 +40,23 @@ router.post('/:userId/:cardId', async (req, res, next) => {
     const cardToAdd = await Card.findByPk(req.params.cardId);
     await userToUpdate.addCard(req.params.cardId);
     res.send(cardToAdd)
+  } catch (error) {
+    next(error)
+  }
+})
+
+router.delete('/:userId/:cardId', async (req, res, next) => {
+  try {
+    // const userToUnassignCard = User.findByPk(req.params.userId);
+    const cardToUnassign = Card.findByPk(req.params.cardId);
+    // await userToUnassignCard.removeCard(req.params.cardId);
+    await User_Cards.destroy({
+      where: {
+        userId: req.params.userId,
+        cardId: req.params.cardId
+      }
+    })
+    res.send(cardToUnassign);
   } catch (error) {
     next(error)
   }

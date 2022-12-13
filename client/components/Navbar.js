@@ -12,6 +12,8 @@ const NavbarCustom = ({handleClick, isLoggedIn}) => (
         <Nav style={{width: '100%'}}className="d-flex align-items-center justify-content-between">
           <Navbar.Brand href="/home"><img  className="logo align-self-start flex-grow-1" style={{width: '75%'}} src="/images/credlylogo.png"/></Navbar.Brand>
           <Container className="d-flex justify-content-end align">
+            <Nav.Link href="/home">Home</Nav.Link>
+            <Nav.Link href="/transaction">Calculate Rewards</Nav.Link>
             <Nav.Link href="/addcard">Add New Card</Nav.Link>
             <Nav.Link href="#" onClick={handleClick}>Logout</Nav.Link>
           </Container>

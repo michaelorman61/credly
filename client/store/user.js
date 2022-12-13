@@ -1,5 +1,5 @@
 import axios from 'axios';
-import history from 'history';
+import history from '../history.js'
 
 const initialState = {
   allUserCreditCards: [],
@@ -10,6 +10,7 @@ const initialState = {
  */
 const SET_ALL_USER_CREDIT_CARDS = 'SET_ALL_CREDIT_CARDS';
 const ADD_NEW_CARD = 'ADD_NEW_CARD';
+const DELETE_CARD = 'DELETE_CARD';
 
 /**
  * ACTION CREATORS
@@ -21,8 +22,14 @@ const setAllUserCards = (cards) => {
   };
 };
 const addNewCard = (card) => {
-  return{
+  return {
     type: ADD_NEW_CARD,
+    card
+  }
+}
+const deleteCard = (card) => {
+  return {
+    type: DELETE_CARD,
     card
   }
 }
@@ -30,8 +37,9 @@ const addNewCard = (card) => {
 export const fetchAllUserCreditCards = (userId) => {
   return async (dispatch) => {
     console.log(userId);
-    const { data: cards} = await axios.get(`/api/users/${userId}`)
+    const { data: user} = await axios.get(`/api/users/${userId}`)
     console.log("user id after axios reequst", userId)
+    const cards = user.cards
     const action = setAllUserCards(cards);
     dispatch(action);
   }
@@ -39,9 +47,20 @@ export const fetchAllUserCreditCards = (userId) => {
 
 export const addCardToUser = (userId, cardId) => {
   return async (dispatch) => {
-    const {data: card} = await axios.post(`/api/${userId}/${cardId}`)
+    const {data: card} = await axios.post(`/api/users/${userId}/${cardId}`)
     const action = addNewCard(card);
     dispatch(action);
+    console.log(history);
+    history.push('/home')
+  }
+}
+
+export const removeCard = (cardId, userId) => {
+  return async (dispatch) => {
+    const {data: card} = await axios.delete(`/api/users/${userId}/${cardId}`);
+    const action = deleteCard(card);
+    dispatch(action);
+    history.push('/home')
   }
 }
 
@@ -50,9 +69,10 @@ export default function(state = initialState, action) {
     case SET_ALL_USER_CREDIT_CARDS:
       return {...state, allUserCreditCards: action.cards};
     case ADD_NEW_CARD:
-      return {...state, allUserCreditCards: [...action.card]}
+      return {...state, allUserCreditCards: state.allUserCreditCards.concat(action.card)}
+    case DELETE_CARD:
+      return state.allUserCreditCards.filter(card => card.id !== action.card.id)
     default:
       return state;
   }
-
 }

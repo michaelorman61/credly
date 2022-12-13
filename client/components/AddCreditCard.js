@@ -1,7 +1,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import {Dropdown, Container, Button} from 'react-bootstrap';
-import { fetchCompanyCards, dupeNewCard } from '../store/cards';
+import { fetchCompanyCards } from '../store/cards';
 import { addCardToUser } from '../store/user';
 
 class AddCreditCard extends React.Component {
@@ -9,7 +9,7 @@ class AddCreditCard extends React.Component {
     super(props);
     this.state = {
       selectedCompany: 'Company',
-      selectedCard: '',
+      selectedCard: 'Select a Card'
     }
     this.handleCompanyChange = this.handleCompanyChange.bind(this);
     this.handleCardChange = this.handleCardChange.bind(this);
@@ -19,13 +19,16 @@ class AddCreditCard extends React.Component {
    async handleCompanyChange(e) {
     console.log(e)
     await this.setState({
-      selectedCompany: e
+      selectedCompany: e,
+      selectedCard: 'Select a Card'
     }, () => console.log(this.state));
     await this.props.loadCardOptions(this.state.selectedCompany);
     console.log(this.props.cardOptions)
   }
 
   async handleCardChange(e) {
+    console.log('event', typeof(e))
+    console.log('event', e)
     await this.setState({
       selectedCard: e
     }, () => console.log(this.state));
@@ -33,8 +36,7 @@ class AddCreditCard extends React.Component {
 
   async handleSubmit() {
     console.log("SUBMITTING")
-    await this.props.createNewCard(this.state.selectedCard)
-    await this.props.connectCardToUser(this.props.id, this.props.cardToAdd.id
+    await this.props.connectCardToUser(this.props.id, this.state.selectedCard
     )
   }
 
@@ -62,11 +64,11 @@ class AddCreditCard extends React.Component {
             ) : (
               <Container>
                 {console.log(this.props.cardOptions)}
-                <Dropdown.Toggle variant="primary" id="dropdown-basic">Select a Card</Dropdown.Toggle>
+                <Dropdown.Toggle variant="primary" id="dropdown-basic">{this.state.selectedCard}</Dropdown.Toggle>
                 <Dropdown.Menu>
                   {this.props.cardOptions.map(card => {
                     return(
-                      <Dropdown.Item key={card.id} eventKey={card.id}>{card.name}</Dropdown.Item>
+                      <Dropdown.Item key={card.id} eventKey={card.id}>{`${card.id}. ${card.name}`}</Dropdown.Item>
                     )
                   })}
                 </Dropdown.Menu>
@@ -85,7 +87,6 @@ class AddCreditCard extends React.Component {
 const mapState = state => {
   return{
     cardOptions: state.cards.currentCreditCardOptions,
-    cardToAdd: state.cards.dupeCard,
     id: state.auth.id
   }
 }
@@ -94,9 +95,6 @@ const mapDispatch = dispatch => {
   return{
     loadCardOptions: (companyName) => {
       dispatch(fetchCompanyCards(companyName))
-    },
-    createNewCard: (cardId) => {
-      dispatch(dupeNewCard(cardId))
     },
     connectCardToUser: (userId, cardId) => {
       dispatch(addCardToUser(userId, cardId))

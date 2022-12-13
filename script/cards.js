@@ -9,13 +9,13 @@ const cards = [
     id: 2,
     name: "Travel Rewards",
     company: "Bank of America",
-    imageUrl: "/images/boatravel.jpeg"
+    imageUrl: "/images/boatravel.jpeg",
   },
   {
     id: 3,
     name: "Premium Rewards",
     company: "Bank of America",
-    imageUrl: "/images/boapremium.png"
+    imageUrl: "/images/boapremium.png",
   },
   {
     id: 4,

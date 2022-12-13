@@ -1,7 +1,7 @@
 import React from 'react'
 import {connect} from 'react-redux'
-import { fetchAllUserCreditCards } from '../store/user';
-import { Card, Container } from 'react-bootstrap';
+import { fetchAllUserCreditCards, removeCard } from '../store/user';
+import { Card, Container, Button, Spinner } from 'react-bootstrap';
 
 /**
  * COMPONENT
@@ -14,12 +14,20 @@ class Home extends React.Component {
   }
 
   async componentDidMount() {
+    console.log("pre mount length", this.props.userCards.length)
     await this.props.loadAllUserCreditCards(this.props.id)
+    console.log("mounted length", this.props.userCards.length)
   }
 
   render () {
     console.log(this.props.id)
     console.log(this.props.userCards)
+    if(this.props.userCards === undefined){
+      return(
+        <Spinner animation="border" role='status'>
+        </Spinner>
+      )
+    }
     return(
     <div>
       <h3>Welcome, {this.props.username}</h3>
@@ -37,6 +45,11 @@ class Home extends React.Component {
                   <Card.Title style={{overflow: 'wrap'}}>{card.company} {card.name}</Card.Title>
                   {/* <Card.Subtitle>{card.name}</Card.Subtitle> */}
                   <Card.Text>lorem ipsum text</Card.Text>
+                  <Button type="submit" onClick={async () => {await this.props.deleteCard(card.id, this.props.id)
+                  setTimeout(async () => await this.props.loadAllUserCreditCards(this.props.id), 200)
+                  }}>
+                    Delete Card
+                  </Button>
                 </Card.Body>
               </Card>
             )
@@ -47,6 +60,7 @@ class Home extends React.Component {
     )
   }
 }
+
 
 /**
  * CONTAINER
@@ -63,6 +77,9 @@ const mapDispatch = dispatch => {
   return {
     loadAllUserCreditCards: (userId) => {
       dispatch(fetchAllUserCreditCards(userId));
+    },
+    deleteCard: (cardId, userId) => {
+      dispatch(removeCard(cardId, userId));
     }
   }
 }
